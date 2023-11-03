@@ -10,7 +10,7 @@ export function InputUI({ ...props }: Props) {
   return (
     <StyledMaskedTextInput
       {...props}
-      className="w-full bg-gray-300/75 p-3 rounded-md px-2 text-lg"
+      className="w-full bg-gray-300/90 p-3 rounded-md px-2 text-lg"
     />
   )
 }

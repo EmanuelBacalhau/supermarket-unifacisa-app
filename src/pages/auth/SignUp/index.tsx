@@ -1,27 +1,27 @@
 import { View } from 'react-native'
 
-import { styled } from 'nativewind'
-
-import { FormSignIn } from './components/FormSignIn'
+import { FormSignUp } from './components/FormSignUp'
 import { AuthHeader } from '../../../components/auth/AuthHeader'
 import { AuthHandlePage } from '../../../components/auth/AuthHandlePage'
 import { AuthBackground } from '../../../components/auth/AuthBackground'
 
+import { styled } from 'nativewind'
+
 const StyledView = styled(View)
 
-export function SignIn() {
+export function SignUp() {
   return (
     <StyledView className="py-12 flex-1 justify-between">
       <AuthBackground />
 
       <AuthHeader />
 
-      <FormSignIn />
+      <FormSignUp />
 
       <AuthHandlePage
-        page="signUp"
-        content="Do not have an account?"
-        titleButton="Register"
+        page={'signIn'}
+        titleButton="Access"
+        content="Already have an account?"
       />
     </StyledView>
   )

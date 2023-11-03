@@ -14,7 +14,10 @@ const StyledText = styled(Text)
 
 const StyledAnimatedView = styled(Animated.View)
 
-export function FormSignIn() {
+export function FormSignUp() {
+  const [name, setName] = useState('')
+  const [birthday, setBirthday] = useState('')
+  const [cpf, setCpf] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -28,6 +31,22 @@ export function FormSignIn() {
           Access account
         </StyledText>
 
+        <InputUI onChangeText={setName} placeholder="Type your name" />
+
+        <InputUI
+          onChangeText={setBirthday}
+          placeholder="Type your birthday"
+          mask="99/99/9999"
+          keyboardType="numeric"
+        />
+
+        <InputUI
+          onChangeText={setCpf}
+          placeholder="Type your cpf"
+          mask="999.999.999-99"
+          keyboardType="numeric"
+        />
+
         <InputUI
           onChangeText={setEmail}
           placeholder="Type your email"
@@ -40,7 +59,7 @@ export function FormSignIn() {
           secureTextEntry
         />
 
-        <ButtonUI title="Sign in" />
+        <ButtonUI title="Register" />
       </StyledView>
     </StyledAnimatedView>
   )
