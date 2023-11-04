@@ -23,7 +23,7 @@ export function CardProduct({ ...props }: Props) {
         resizeMode="center"
       />
 
-      <StyledView className="flex-1 overflow-hidden line-clamp-1 justify-between">
+      <StyledView className="flex-1 justify-between">
         <StyledText
           className="font-bold text-lg text-gray-800"
           numberOfLines={1}

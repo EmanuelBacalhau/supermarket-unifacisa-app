@@ -1,11 +1,12 @@
+import { useState } from 'react'
 import { FlatList, View } from 'react-native'
 
-import { styled } from 'nativewind'
 import { HeaderHome } from './components/HeaderHome'
 import { CardProduct } from './components/CardProduct'
-import { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { AppNavigatorRoutesProp } from '../../../routes/app-routes'
+
+import { styled } from 'nativewind'
 
 const StyledView = styled(View)
 const StyledFlatList = styled(FlatList)

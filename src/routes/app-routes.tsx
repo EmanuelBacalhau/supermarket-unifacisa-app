@@ -1,4 +1,4 @@
-import { Platform, useColorScheme } from 'react-native'
+import { Platform } from 'react-native'
 
 import {
   createBottomTabNavigator,
@@ -10,11 +10,13 @@ import { House, ShoppingCart, UserCircle } from 'phosphor-react-native'
 import { Home } from '../pages/app/Home'
 import { Cart } from '../pages/app/Cart'
 import { Profile } from '../pages/app/Profile'
+import { Product } from '../pages/app/Product'
 
 type AppRoutes = {
   home: undefined
   cart: undefined
   profile: undefined
+  product: undefined
 }
 
 export type AppNavigatorRoutesProp = BottomTabNavigationProp<AppRoutes>
@@ -27,10 +29,10 @@ export function AppRouter() {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarActiveTintColor: 'rgb(234 179 8)',
+        tabBarActiveTintColor: 'rgb(249 115 22)',
         tabBarInactiveTintColor: 'rgb(229 231 235)',
         tabBarStyle: {
-          backgroundColor: 'rgb(75 85 99)',
+          backgroundColor: 'rgb(234 179 8)',
           borderTopWidth: 0,
           height: Platform.OS === 'android' ? 'auto' : 96,
           paddingBottom: 30,
@@ -64,6 +66,13 @@ export function AppRouter() {
           tabBarIcon: ({ color }) => {
             return <UserCircle color={color} weight="fill" size={30} />
           },
+        }}
+      />
+      <Screen
+        name="product"
+        component={Product}
+        options={{
+          tabBarButton: () => null,
         }}
       />
     </Navigator>
