@@ -27,10 +27,10 @@ export function AppRouter() {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarActiveTintColor: 'orange',
-        tabBarInactiveTintColor: 'black',
+        tabBarActiveTintColor: 'rgb(234 179 8)',
+        tabBarInactiveTintColor: 'rgb(229 231 235)',
         tabBarStyle: {
-          backgroundColor: 'yellow',
+          backgroundColor: 'rgb(75 85 99)',
           borderTopWidth: 0,
           height: Platform.OS === 'android' ? 'auto' : 96,
           paddingBottom: 30,
