@@ -12,7 +12,7 @@ const StyledSignOut = styled(SignOut)
 
 export function HeaderHome() {
   return (
-    <StyledView className="bg-gray-600 pt-12 pb-4 px-4 flex-row items-center">
+    <StyledView className="bg-yellow-500 pt-12 pb-4 px-4 flex-row items-center">
       <AvatarHome first="E" second="B" />
 
       <WelcomeHome name="Emanuel Bacalhau" />
