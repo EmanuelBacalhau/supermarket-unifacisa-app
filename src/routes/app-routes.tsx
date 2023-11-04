@@ -38,7 +38,6 @@ export function AppRouter() {
           paddingBottom: 30,
           paddingTop: 30,
         },
-        tabBarHideOnKeyboard: true,
       }}
     >
       <Screen

@@ -3,9 +3,9 @@ import { TouchableOpacity, View } from 'react-native'
 import { SignOut } from 'phosphor-react-native'
 
 import { AvatarHome } from './AvatarHome'
+import { WelcomeHome } from './WelcomeHome'
 
 import { styled } from 'nativewind'
-import { WelcomeHome } from './WelcomeHome'
 
 const StyledView = styled(View)
 const StyledSignOut = styled(SignOut)

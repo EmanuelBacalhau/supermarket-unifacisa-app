@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 import { useNavigation } from '@react-navigation/native'
 import { HeaderProduct } from './components/HeaderProduct'
@@ -15,10 +15,12 @@ export function Product() {
     navigation.goBack()
   }
   return (
-    <StyledView>
+    <StyledView className="flex-1">
       <HeaderProduct onPress={handleGoBackHome} />
 
-      <CardProductDetails />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <CardProductDetails />
+      </ScrollView>
     </StyledView>
   )
 }
