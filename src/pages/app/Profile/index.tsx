@@ -1,26 +1,66 @@
-import { useState } from 'react'
-
 import { ScrollView, Text, View } from 'react-native'
 
-import { styled } from 'nativewind'
+import * as yup from 'yup'
+
+import { yupResolver } from '@hookform/resolvers/yup'
+
 import { InputUI } from '../../../components/ui/InputUI'
 import { ButtonUI } from '../../../components/ui/ButtonUI'
 import { ProfileImage } from './components/ProfileImage'
 import { HeaderProfile } from './components/HeaderProfile'
+import { Controller, useForm } from 'react-hook-form'
+
+import { styled } from 'nativewind'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledScrollView = styled(ScrollView)
 
-export function Profile() {
-  const [name, setName] = useState('Emanuel Bacalhau')
-  const [email] = useState('carlosemanuelbatistabacalhau@gmail.com')
-  const [oldPassword, setOldPassword] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+const schema = yup.object({
+  name: yup.string().required('Name is required'),
+  email: yup
+    .string()
+    .required('Email is required')
+    .email('Must be a email valid'),
+  oldPassword: yup
+    .string()
+    .min(8, 'Password must have at least 8 characters')
+    .required('Old password is required'),
+  password: yup
+    .string()
+    .min(8, 'Password must have at least 8 characters')
+    .required('Password is required'),
+  confirmPassword: yup
+    .string()
+    .min(8, 'Password must have at least 8 characters')
+    .required('Confirm password is required')
+    .oneOf([yup.ref('password')], 'Passwords not the same'),
+})
 
-  const handleUpdate = () => {
-    console.log(name)
+type FormData = {
+  name: string
+  email: string
+  oldPassword: string
+  password: string
+  confirmPassword: string
+}
+
+export function Profile() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm<FormData>({
+    defaultValues: {
+      name: 'Emanuel Bacalhau',
+      email: 'carlosemanuelbatistabacalhau@gmail.com',
+    },
+    resolver: yupResolver(schema),
+  })
+
+  const handleUpdate = (data: FormData) => {
+    console.log(data)
   }
 
   return (
@@ -28,46 +68,102 @@ export function Profile() {
       <HeaderProfile />
 
       <StyledView className="flex-1 items-center mt-4 px-4">
-        <ProfileImage one={name[0]} two={name[1]} />
+        <ProfileImage one={getValues().name[0]} two={getValues().name[1]} />
 
         <StyledScrollView
           showsVerticalScrollIndicator={false}
           className="w-full mt-5"
         >
-          <StyledView className="gap-y-2">
-            <InputUI
-              onChangeText={(text, rawText) => {
-                setName(rawText)
+          <StyledView style={{ gap: 8 }}>
+            <Controller
+              control={control}
+              name="name"
+              render={({ field: { onBlur, onChange, value } }) => {
+                return (
+                  <InputUI
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    messageError={errors.name?.message}
+                  />
+                )
               }}
-              value={name}
             />
 
-            <InputUI onChangeText={() => {}} value={email} editable={false} />
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, onBlur, value } }) => {
+                return (
+                  <InputUI
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    editable={false}
+                    messageError={errors.email?.message}
+                  />
+                )
+              }}
+            />
 
             <StyledText className="text-lg text-gray-700 font-semibold">
               Change password
             </StyledText>
 
-            <InputUI
-              value={oldPassword}
-              placeholder="Old password"
-              onChangeText={(text, rawText) => setOldPassword(rawText)}
-              secureTextEntry
-            />
-            <InputUI
-              value={password}
-              placeholder="Password"
-              onChangeText={(text, rawText) => setPassword(rawText)}
-              secureTextEntry
-            />
-            <InputUI
-              value={confirmPassword}
-              placeholder="Confirm password"
-              onChangeText={(text, rawText) => setConfirmPassword(rawText)}
-              secureTextEntry
+            <Controller
+              control={control}
+              name="oldPassword"
+              render={({ field: { onBlur, onChange, value } }) => {
+                return (
+                  <InputUI
+                    value={value}
+                    onBlur={onBlur}
+                    placeholder="Old password"
+                    onChangeText={onChange}
+                    secureTextEntry
+                    messageError={errors.oldPassword?.message}
+                  />
+                )
+              }}
             />
 
-            <ButtonUI title="update" onPress={handleUpdate} />
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { value, onBlur, onChange } }) => {
+                return (
+                  <InputUI
+                    value={value}
+                    placeholder="Password"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    secureTextEntry
+                    messageError={errors.password?.message}
+                  />
+                )
+              }}
+            />
+
+            <Controller
+              control={control}
+              name="confirmPassword"
+              render={({ field: { value, onBlur, onChange } }) => {
+                return (
+                  <InputUI
+                    value={value}
+                    onBlur={onBlur}
+                    placeholder="Confirm password"
+                    onChangeText={onChange}
+                    secureTextEntry
+                    onSubmitEditing={handleSubmit(handleUpdate)}
+                    returnKeyType="send"
+                    messageError={errors.confirmPassword?.message}
+                  />
+                )
+              }}
+            />
+
+            <ButtonUI title="update" onPress={handleSubmit(handleUpdate)} />
           </StyledView>
         </StyledScrollView>
       </StyledView>

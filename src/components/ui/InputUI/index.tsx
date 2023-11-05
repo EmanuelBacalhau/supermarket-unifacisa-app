@@ -1,16 +1,30 @@
-import { MaskedTextInput, MaskedTextInputProps } from 'react-native-mask-text'
+import MaskInput, { MaskInputProps } from 'react-native-mask-input'
 
 import { styled } from 'nativewind'
+import { Text, View } from 'react-native'
 
-const StyledMaskedTextInput = styled(MaskedTextInput)
+const StyledView = styled(View)
+const StyledText = styled(Text)
+const StyledMaskedTextInput = styled(MaskInput)
 
-type Props = MaskedTextInputProps
+type Props = MaskInputProps & {
+  messageError?: string | null
+}
 
-export function InputUI({ ...props }: Props) {
+export function InputUI({ messageError, ...props }: Props) {
   return (
-    <StyledMaskedTextInput
-      {...props}
-      className="w-full bg-gray-300/90 p-3 rounded-md px-2 text-lg"
-    />
+    <StyledView>
+      <StyledMaskedTextInput
+        {...props}
+        className={`w-full bg-gray-300/90 p-3 rounded-md px-2 text-lg ${
+          messageError && 'border-2 border-red-600'
+        }`}
+      />
+      {messageError && (
+        <StyledText className="text-red-600 font-semibold text-base">
+          {messageError}
+        </StyledText>
+      )}
+    </StyledView>
   )
 }
