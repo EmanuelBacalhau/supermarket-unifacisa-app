@@ -1,5 +1,7 @@
 import { Controller, useForm } from 'react-hook-form'
 
+import { AppError } from '../../../../../utils/AppError'
+
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { Text, View } from 'react-native'
@@ -13,9 +15,14 @@ import * as yup from 'yup'
 
 import { styled } from 'nativewind'
 import { Masks } from 'react-native-mask-input'
+import { api } from '../../../../../services/api'
+
+import Toast from 'react-native-toast-message'
+import { useNavigation } from '@react-navigation/native'
+import { AuthNavigatorRoutesProps } from '../../../../../routes/auth-routes'
+import { useState } from 'react'
 
 const StyledView = styled(View)
-const StyledText = styled(Text)
 
 const StyledAnimatedView = styled(Animated.View)
 
@@ -50,8 +57,45 @@ export function FormSignUp() {
     resolver: yupResolver(schema),
   })
 
-  function handleSignUp(data: FormData) {
-    console.log(data)
+  const [loading, setLoading] = useState(false)
+
+  const navigation = useNavigation<AuthNavigatorRoutesProps>()
+
+  async function handleSignUp({
+    name,
+    birthday,
+    cpf,
+    email,
+    password,
+  }: FormData) {
+    try {
+      setLoading(true)
+      await api.post('/clients/register', {
+        name,
+        birthday,
+        cpf,
+        email,
+        password,
+      })
+
+      setLoading(false)
+      navigation.replace('signIn')
+    } catch (error) {
+      setLoading(true)
+      const isAppError = error instanceof AppError
+      const message = isAppError ? error.message : 'Internal server error'
+
+      if (isAppError) {
+        setLoading(false)
+        return Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: message,
+          topOffset: 60,
+        })
+      }
+      setLoading(false)
+    }
   }
 
   return (
@@ -60,10 +104,6 @@ export function FormSignUp() {
       entering={FadeInLeft.duration(1000).easing(Easing.linear)}
     >
       <StyledView className="w-[90%]" style={{ gap: 8 }}>
-        <StyledText className="text-center uppercase text-3xl font-bold text-white mb-4">
-          Register
-        </StyledText>
-
         <Controller
           control={control}
           name="name"
@@ -88,9 +128,9 @@ export function FormSignUp() {
               <InputUI
                 value={value}
                 onBlur={onBlur}
-                mask={Masks.DATE_DDMMYYYY}
+                mask={Masks.DATE_YYYYMMDD}
                 onChangeText={onChange}
-                placeholder="Type your birthday"
+                placeholder="Type your birthday (YYYY/MM/DD)"
                 keyboardType="numeric"
                 messageError={errors.birthday?.message}
               />
@@ -152,7 +192,11 @@ export function FormSignUp() {
           }}
         />
 
-        <ButtonUI title="Register" />
+        <ButtonUI
+          title="Register"
+          loading={loading}
+          onPress={handleSubmit(handleSignUp)}
+        />
       </StyledView>
     </StyledAnimatedView>
   )

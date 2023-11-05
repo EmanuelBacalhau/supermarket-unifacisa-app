@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 
 import { FormSignUp } from './components/FormSignUp'
 import { AuthHeader } from '../../../components/auth/AuthHeader'
@@ -8,6 +8,7 @@ import { AuthBackground } from '../../../components/auth/AuthBackground'
 import { styled } from 'nativewind'
 
 const StyledView = styled(View)
+const StyledText = styled(Text)
 
 export function SignUp() {
   return (
@@ -15,6 +16,10 @@ export function SignUp() {
       <AuthBackground />
 
       <AuthHeader />
+
+      <StyledText className="text-center uppercase text-3xl font-bold text-white">
+        Register
+      </StyledText>
 
       <FormSignUp />
 
