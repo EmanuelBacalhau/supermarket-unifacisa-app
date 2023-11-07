@@ -8,12 +8,12 @@ import Toast from 'react-native-toast-message'
 import { View } from 'react-native'
 
 export function Routes() {
-  const { isAuthenticated } = useAuth()
+  const { user } = useAuth()
 
   return (
     <View style={{ flex: 1 }}>
       <NavigationContainer>
-        {isAuthenticated ? <AppRouter /> : <AuthRouter />}
+        {user.id ? <AppRouter /> : <AuthRouter />}
       </NavigationContainer>
       <Toast />
     </View>

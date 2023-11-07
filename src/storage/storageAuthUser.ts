@@ -7,7 +7,11 @@ export async function saveUserInStorage(data: UserDto) {
 }
 
 export async function getUserInStorage() {
-  return await AsyncStorage.getItem(SECRET_USER)
+  const response = await AsyncStorage.getItem(SECRET_USER)
+
+  const user: UserDto = response ? JSON.parse(response) : {}
+
+  return user
 }
 
 export async function removeUserInStorage() {

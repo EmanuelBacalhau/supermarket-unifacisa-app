@@ -15,7 +15,7 @@ import { AppError } from '../utils/AppError'
 
 import Toast from 'react-native-toast-message'
 import { UserSignInDto } from '../dtos/UserSignInDto'
-import axios from 'axios'
+
 import {
   getUserInStorage,
   removeUserInStorage,
@@ -27,7 +27,6 @@ export type AuthContextDataProps = {
   signIn: (data: UserSignInDto) => Promise<void>
   signUp: (data: UserSignUpDto) => Promise<void>
   signOut: () => Promise<void>
-  isAuthenticated: boolean
 }
 
 export const AuthContext = createContext<AuthContextDataProps>(
@@ -39,28 +38,18 @@ type AuthContextProviderProps = {
 }
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
-  const [user, setUser] = useState<UserDto>({
-    id: '',
-    email: '',
-    name: '',
-  })
+  const [user, setUser] = useState<UserDto>({} as UserDto)
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  async function loadUserData() {
+    const userLogged = await getUserInStorage()
 
-  async function verifyTokenAndUserData() {
-    const token = await getTokenInStorage()
-
-    const userData = await getUserInStorage()
-
-    if (userData) {
-      setUser(JSON.parse(userData))
+    if (userLogged) {
+      setUser(userLogged)
     }
-
-    setIsAuthenticated(!!token)
   }
 
   useEffect(() => {
-    verifyTokenAndUserData()
+    loadUserData()
   }, [])
 
   const signIn = async (userData: UserSignInDto) => {
@@ -71,10 +60,9 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
       setUser(data.client)
 
-      await saveUserInStorage(user)
-      await saveTokenInStorage(data.token)
+      await saveUserInStorage(data.client)
 
-      setIsAuthenticated(!!(await getTokenInStorage()))
+      await saveTokenInStorage(data.token)
     } catch (error) {
       const isAppError = error instanceof AppError
 
@@ -114,10 +102,21 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   }
 
   const signOut = async () => {
-    await removeTokenInStorage()
-    await removeUserInStorage()
+    try {
+      setUser({} as UserDto)
+      await removeUserInStorage()
+      await removeTokenInStorage()
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const message = isAppError ? error.message : 'Internal server error'
 
-    verifyTokenAndUserData()
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: message,
+        topOffset: 60,
+      })
+    }
   }
 
   return (
@@ -127,7 +126,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         signIn,
         signUp,
         signOut,
-        isAuthenticated,
       }}
     >
       {children}

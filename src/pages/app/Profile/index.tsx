@@ -11,6 +11,8 @@ import { HeaderProfile } from './components/HeaderProfile'
 import { Controller, useForm } from 'react-hook-form'
 
 import { styled } from 'nativewind'
+import { useAuth } from '../../../hooks/useAuth'
+import { api } from '../../../services/api'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -46,6 +48,8 @@ type FormData = {
 }
 
 export function Profile() {
+  const { user } = useAuth()
+
   const {
     control,
     handleSubmit,
@@ -53,14 +57,14 @@ export function Profile() {
     getValues,
   } = useForm<FormData>({
     defaultValues: {
-      name: 'Emanuel Bacalhau',
-      email: 'carlosemanuelbatistabacalhau@gmail.com',
+      name: user.name,
+      email: user.email,
     },
     resolver: yupResolver(schema),
   })
 
-  const handleUpdate = (data: FormData) => {
-    console.log(data)
+  const handleUpdate = async (data: FormData) => {
+    console.log((await api.get('/clients/details')).data)
   }
 
   return (
