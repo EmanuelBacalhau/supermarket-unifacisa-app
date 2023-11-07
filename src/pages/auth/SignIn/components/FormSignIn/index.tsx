@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { useAuth } from '../../../../../hooks/useAuth'
+
 import { Text, View } from 'react-native'
 
 import { Controller, useForm } from 'react-hook-form'
@@ -42,10 +45,14 @@ export function FormSignIn() {
     resolver: yupResolver(schemaSignIn),
   })
 
-  function handleSignIn({ email, password }: FormDataProps) {
-    console.log(errors)
+  const { signIn } = useAuth()
 
-    console.log({ email, password })
+  const [loading, setLoading] = useState<boolean>(false)
+
+  async function handleSignIn(data: FormDataProps) {
+    setLoading(true)
+    await signIn(data)
+    setLoading(false)
   }
 
   return (
@@ -103,7 +110,12 @@ export function FormSignIn() {
           />
         </StyledView>
 
-        <ButtonUI title="Sign in" onPress={handleSubmit(handleSignIn)} />
+        <ButtonUI
+          title="Sign in"
+          loading={loading}
+          disabled={loading}
+          onPress={handleSubmit(handleSignIn)}
+        />
       </StyledView>
     </StyledAnimatedView>
   )

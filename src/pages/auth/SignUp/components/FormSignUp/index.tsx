@@ -1,10 +1,8 @@
 import { Controller, useForm } from 'react-hook-form'
 
-import { AppError } from '../../../../../utils/AppError'
-
 import { yupResolver } from '@hookform/resolvers/yup'
 
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
 import Animated, { Easing, FadeInLeft } from 'react-native-reanimated'
 
@@ -15,12 +13,9 @@ import * as yup from 'yup'
 
 import { styled } from 'nativewind'
 import { Masks } from 'react-native-mask-input'
-import { api } from '../../../../../services/api'
 
-import Toast from 'react-native-toast-message'
-import { useNavigation } from '@react-navigation/native'
-import { AuthNavigatorRoutesProps } from '../../../../../routes/auth-routes'
 import { useState } from 'react'
+import { useAuth } from '../../../../../hooks/useAuth'
 
 const StyledView = styled(View)
 
@@ -57,45 +52,16 @@ export function FormSignUp() {
     resolver: yupResolver(schema),
   })
 
+  const { signUp } = useAuth()
+
   const [loading, setLoading] = useState(false)
 
-  const navigation = useNavigation<AuthNavigatorRoutesProps>()
+  async function handleSignUp(data: FormData) {
+    setLoading(true)
 
-  async function handleSignUp({
-    name,
-    birthday,
-    cpf,
-    email,
-    password,
-  }: FormData) {
-    try {
-      setLoading(true)
-      await api.post('/clients/register', {
-        name,
-        birthday,
-        cpf,
-        email,
-        password,
-      })
+    await signUp(data)
 
-      setLoading(false)
-      navigation.replace('signIn')
-    } catch (error) {
-      setLoading(true)
-      const isAppError = error instanceof AppError
-      const message = isAppError ? error.message : 'Internal server error'
-
-      if (isAppError) {
-        setLoading(false)
-        return Toast.show({
-          type: 'error',
-          position: 'top',
-          text1: message,
-          topOffset: 60,
-        })
-      }
-      setLoading(false)
-    }
+    setLoading(false)
   }
 
   return (

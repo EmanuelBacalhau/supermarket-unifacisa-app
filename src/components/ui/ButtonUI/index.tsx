@@ -1,9 +1,4 @@
-import {
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  ActivityIndicator,
-} from 'react-native'
+import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native'
 
 import { CircleNotch } from 'phosphor-react-native'
 
