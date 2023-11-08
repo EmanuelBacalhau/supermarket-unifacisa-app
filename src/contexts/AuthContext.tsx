@@ -42,9 +42,10 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   async function loadUserData() {
     const userLogged = await getUserInStorage()
+    const storageToken = await getTokenInStorage()
 
-    if (userLogged) {
-      setUser(userLogged)
+    if (storageToken && userLogged) {
+      userAndTokenUpdate(userLogged, storageToken)
     }
   }
 
@@ -52,17 +53,24 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     loadUserData()
   }, [])
 
+  function userAndTokenUpdate(userData: UserDto, token: string) {
+    api.defaults.headers.common.Authorization = `Bearer ${token}`
+    setUser(userData)
+  }
+
+  async function userAndTokenStorageSave(userData: UserDto, token: string) {
+    await saveUserInStorage(userData)
+    await saveTokenInStorage(token)
+  }
+
   const signIn = async (userData: UserSignInDto) => {
     try {
       const { data } = await api.post('/auth/clients', userData)
 
-      api.defaults.headers.common.Authorization = `Bearer ${data.token}`
-
-      setUser(data.client)
-
-      await saveUserInStorage(data.client)
-
-      await saveTokenInStorage(data.token)
+      if (data.client && data.token) {
+        await userAndTokenStorageSave(data.client, data.token)
+        userAndTokenUpdate(data.client, data.token)
+      }
     } catch (error) {
       const isAppError = error instanceof AppError
 
