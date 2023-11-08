@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FlatList, View } from 'react-native'
 
 import { HeaderHome } from './components/HeaderHome'
@@ -7,66 +7,46 @@ import { useNavigation } from '@react-navigation/native'
 import { AppNavigatorRoutesProp } from '../../../routes/app-routes'
 
 import { styled } from 'nativewind'
+import { AppError } from '../../../utils/AppError'
+import Toast from 'react-native-toast-message'
+import { api } from '../../../services/api'
+import { ProductDto } from '../../../dtos/ProductDto'
 
 const StyledView = styled(View)
-const StyledFlatList = styled(FlatList)
+const StyledFlatList = styled(FlatList<ProductDto>)
 
 export function Home() {
-  const [products] = useState([
-    {
-      name: 'Teste',
-      promotionPrice: 150,
-      price: 50,
-      amount: 20,
-    },
-    {
-      name: 'Teste',
-      promotionPrice: 150,
-      price: 50,
-      amount: 20,
-    },
-    {
-      name: 'Teste',
-      promotionPrice: 150,
-      price: 50,
-      amount: 20,
-    },
-    {
-      name: 'Teste',
-      promotionPrice: 150,
-      price: 50,
-      amount: 20,
-    },
-    {
-      name: 'Teste',
-      promotionPrice: 150,
-      price: 50,
-      amount: 20,
-    },
-    {
-      name: 'Teste',
-      promotionPrice: 150,
-      price: 50,
-      amount: 20,
-    },
-    {
-      name: 'Teste',
-      promotionPrice: 150,
-      price: 50,
-      amount: 20,
-    },
-    {
-      name: 'Teste',
-      promotionPrice: 150,
-      price: 50,
-      amount: 20,
-    },
-  ])
+  const [products, setProducts] = useState<ProductDto[]>([])
 
   const navigation = useNavigation<AppNavigatorRoutesProp>()
 
-  function handleOpenProduct() {
-    navigation.navigate('product')
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  async function fetchProducts() {
+    try {
+      const response = await api.get<ProductDto[]>('/products')
+      console.log(response.data[0].imageUrl)
+
+      setProducts(response.data)
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const message = isAppError ? error.message : 'Internal server error'
+
+      Toast.show({
+        text1: message,
+        type: 'error',
+        position: 'top',
+        topOffset: 60,
+      })
+    }
+  }
+
+  function handleOpenProduct(productId: string) {
+    navigation.navigate('product', {
+      productId,
+    })
   }
 
   return (
@@ -75,8 +55,11 @@ export function Home() {
 
       <StyledFlatList
         data={products}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
-          return <CardProduct onPress={handleOpenProduct} />
+          return (
+            <CardProduct data={item} handleDetailsPage={handleOpenProduct} />
+          )
         }}
         className="my-2 mx-2"
         showsVerticalScrollIndicator={false}
