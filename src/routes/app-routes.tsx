@@ -16,7 +16,7 @@ type AppRoutes = {
   home: undefined
   cart: undefined
   profile: undefined
-  product: undefined
+  product: { productId: string }
 }
 
 export type AppNavigatorRoutesProp = BottomTabNavigationProp<AppRoutes>
