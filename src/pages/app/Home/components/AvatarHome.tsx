@@ -13,10 +13,10 @@ type Props = {
 export function AvatarHome({ first, second }: Props) {
   return (
     <StyledView className="flex-row h-14 w-14 bg-black rounded-full items-center justify-center">
-      <StyledText className="text-yellow-500 font-bold text-xl">
+      <StyledText className="text-yellow-500 font-bold text-xl uppercase">
         {first}
       </StyledText>
-      <StyledText className="text-yellow-500 font-bold text-xl">
+      <StyledText className="text-yellow-500 font-bold text-xl uppercase">
         {second}
       </StyledText>
     </StyledView>

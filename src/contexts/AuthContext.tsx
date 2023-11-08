@@ -1,4 +1,11 @@
-import { ReactNode, createContext, useEffect, useState } from 'react'
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  createContext,
+  useEffect,
+  useState,
+} from 'react'
 
 import {
   getTokenInStorage,
@@ -24,6 +31,7 @@ import {
 
 export type AuthContextDataProps = {
   user: UserDto
+  updateUserStorage: (userData: UserDto) => Promise<void>
   signIn: (data: UserSignInDto) => Promise<void>
   signUp: (data: UserSignUpDto) => Promise<void>
   signOut: () => Promise<void>
@@ -61,6 +69,11 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   async function userAndTokenStorageSave(userData: UserDto, token: string) {
     await saveUserInStorage(userData)
     await saveTokenInStorage(token)
+  }
+
+  async function updateUserStorage(userData: UserDto) {
+    setUser(userData)
+    await saveUserInStorage(userData)
   }
 
   const signIn = async (userData: UserSignInDto) => {
@@ -131,6 +144,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     <AuthContext.Provider
       value={{
         user,
+        updateUserStorage,
         signIn,
         signUp,
         signOut,

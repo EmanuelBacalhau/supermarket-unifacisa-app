@@ -20,15 +20,9 @@ export function Home() {
 
   const navigation = useNavigation<AppNavigatorRoutesProp>()
 
-  useEffect(() => {
-    fetchProducts()
-  }, [])
-
   async function fetchProducts() {
     try {
       const response = await api.get<ProductDto[]>('/products')
-      console.log(response.data[0].imageUrl)
-
       setProducts(response.data)
     } catch (error) {
       const isAppError = error instanceof AppError
@@ -42,6 +36,10 @@ export function Home() {
       })
     }
   }
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
 
   function handleOpenProduct(productId: string) {
     navigation.navigate('product', {

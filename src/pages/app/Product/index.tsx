@@ -36,7 +36,7 @@ export function Product() {
 
   useEffect(() => {
     fetchProductDetails()
-  }, [product])
+  }, [productId])
 
   if (product.id !== productId) {
     return (

@@ -43,7 +43,7 @@ export function CardProduct({ data, handleDetailsPage, ...props }: Props) {
             R$ {(data.price + 100).toFixed(2)}
           </StyledText>
           <StyledText className="text-2xl font-bold shadow text-gray-900">
-            R$ {data.price}
+            R$ {data.price.toFixed(2)}
           </StyledText>
         </StyledView>
         <StyledText className="text-sm text-right font-bold text-gray-800/40">

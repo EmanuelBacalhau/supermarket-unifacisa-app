@@ -1,9 +1,5 @@
 import { ScrollView, Text, View } from 'react-native'
 
-import * as yup from 'yup'
-
-import { yupResolver } from '@hookform/resolvers/yup'
-
 import { InputUI } from '../../../components/ui/InputUI'
 import { ButtonUI } from '../../../components/ui/ButtonUI'
 import { ProfileImage } from './components/ProfileImage'
@@ -13,31 +9,14 @@ import { Controller, useForm } from 'react-hook-form'
 import { styled } from 'nativewind'
 import { useAuth } from '../../../hooks/useAuth'
 import { api } from '../../../services/api'
+import { UserDto } from '../../../dtos/UserDto'
+import { AppError } from '../../../utils/AppError'
+import Toast from 'react-native-toast-message'
+import { useState } from 'react'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledScrollView = styled(ScrollView)
-
-const schema = yup.object({
-  name: yup.string().required('Name is required'),
-  email: yup
-    .string()
-    .required('Email is required')
-    .email('Must be a email valid'),
-  oldPassword: yup
-    .string()
-    .min(8, 'Password must have at least 8 characters')
-    .required('Old password is required'),
-  password: yup
-    .string()
-    .min(8, 'Password must have at least 8 characters')
-    .required('Password is required'),
-  confirmPassword: yup
-    .string()
-    .min(8, 'Password must have at least 8 characters')
-    .required('Confirm password is required')
-    .oneOf([yup.ref('password')], 'Passwords not the same'),
-})
 
 type FormData = {
   name: string
@@ -48,7 +27,9 @@ type FormData = {
 }
 
 export function Profile() {
-  const { user } = useAuth()
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const { user, updateUserStorage, signOut } = useAuth()
 
   const {
     control,
@@ -60,11 +41,33 @@ export function Profile() {
       name: user.name,
       email: user.email,
     },
-    resolver: yupResolver(schema),
   })
 
-  const handleUpdate = async (data: FormData) => {
-    console.log((await api.get('/clients/details')).data)
+  async function handleUpdate(data: FormData) {
+    try {
+      setLoading(true)
+      const userUpdated = user
+
+      userUpdated.name = data.name
+
+      await api.put<UserDto>(`/clients/${user.id}`, data)
+
+      await updateUserStorage(userUpdated)
+
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      const isAppError = error instanceof AppError
+
+      const message = isAppError ? error.message : 'Internal server error'
+
+      Toast.show({
+        text1: message,
+        position: 'top',
+        topOffset: 60,
+        type: 'error',
+      })
+    }
   }
 
   return (
@@ -167,7 +170,12 @@ export function Profile() {
               }}
             />
 
-            <ButtonUI title="update" onPress={handleSubmit(handleUpdate)} />
+            <ButtonUI
+              title="update"
+              onPress={handleSubmit(handleUpdate)}
+              loading={loading}
+            />
+            <ButtonUI title="exit" onPress={signOut} />
           </StyledView>
         </StyledScrollView>
       </StyledView>

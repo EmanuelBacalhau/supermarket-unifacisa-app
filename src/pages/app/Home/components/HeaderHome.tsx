@@ -17,7 +17,7 @@ export function HeaderHome() {
 
   return (
     <StyledView className="bg-yellow-500 pt-12 pb-4 px-4 flex-row items-center">
-      <AvatarHome first="E" second="B" />
+      <AvatarHome first={user.name[0]} second={user.name[1]} />
 
       <WelcomeHome name={user.name} />
 
