@@ -1,21 +1,26 @@
 import { useEffect, useState } from 'react'
 import { FlatList, View } from 'react-native'
+import { useAuth } from '../../../hooks/useAuth'
+import { api } from '../../../services/api'
+
+import Toast from 'react-native-toast-message'
+
+import { AppError } from '../../../utils/AppError'
 
 import { HeaderHome } from './components/HeaderHome'
 import { CardProduct } from './components/CardProduct'
 import { useNavigation } from '@react-navigation/native'
 import { AppNavigatorRoutesProp } from '../../../routes/app-routes'
+import { ProductDto } from '../../../dtos/ProductDto'
 
 import { styled } from 'nativewind'
-import { AppError } from '../../../utils/AppError'
-import Toast from 'react-native-toast-message'
-import { api } from '../../../services/api'
-import { ProductDto } from '../../../dtos/ProductDto'
 
 const StyledView = styled(View)
 const StyledFlatList = styled(FlatList<ProductDto>)
 
 export function Home() {
+  const { user, signOut } = useAuth()
+
   const [products, setProducts] = useState<ProductDto[]>([])
 
   const navigation = useNavigation<AppNavigatorRoutesProp>()
@@ -39,7 +44,7 @@ export function Home() {
 
   useEffect(() => {
     fetchProducts()
-  }, [])
+  }, [products])
 
   function handleOpenProduct(productId: string) {
     navigation.navigate('product', {
@@ -49,7 +54,7 @@ export function Home() {
 
   return (
     <StyledView className="flex-1">
-      <HeaderHome />
+      <HeaderHome user={user} signOut={signOut} />
 
       <StyledFlatList
         data={products}

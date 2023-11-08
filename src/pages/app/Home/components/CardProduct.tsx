@@ -1,8 +1,9 @@
+import { api } from '../../../../services/api'
+
 import { View, Text, Pressable, Image, PressableProps } from 'react-native'
+import { ProductDto } from '../../../../dtos/ProductDto'
 
 import { styled } from 'nativewind'
-import { ProductDto } from '../../../../dtos/ProductDto'
-import { api } from '../../../../services/api'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -25,10 +26,8 @@ export function CardProduct({ data, handleDetailsPage, ...props }: Props) {
         source={{
           uri: `${api.defaults.baseURL}/products/${data.imageUrl}`,
         }}
-        width={100}
-        height={60}
-        className="mr-4"
-        resizeMode="cover"
+        className="mr-4 h-20 w-20"
+        resizeMode="center"
       />
 
       <StyledView className="flex-1 justify-between">
