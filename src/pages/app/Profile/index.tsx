@@ -1,18 +1,21 @@
+import { useState } from 'react'
+import { api } from '../../../services/api'
+import { useAuth } from '../../../hooks/useAuth'
+
+import { Controller, useForm } from 'react-hook-form'
+
 import { ScrollView, Text, View } from 'react-native'
+
+import Toast from 'react-native-toast-message'
 
 import { InputUI } from '../../../components/ui/InputUI'
 import { ButtonUI } from '../../../components/ui/ButtonUI'
 import { ProfileImage } from './components/ProfileImage'
 import { HeaderProfile } from './components/HeaderProfile'
-import { Controller, useForm } from 'react-hook-form'
-
-import { styled } from 'nativewind'
-import { useAuth } from '../../../hooks/useAuth'
-import { api } from '../../../services/api'
 import { UserDto } from '../../../dtos/UserDto'
 import { AppError } from '../../../utils/AppError'
-import Toast from 'react-native-toast-message'
-import { useState } from 'react'
+
+import { styled } from 'nativewind'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
