@@ -2,8 +2,10 @@ import axios from 'axios'
 
 import { AppError } from '../utils/AppError'
 
+// ! mudar ip ao trocar de máquina
+
 const api = axios.create({
-  baseURL: 'http://192.168.0.121:3333/api',
+  baseURL: 'http://192.168.80.23:3333/api',
 })
 
 api.interceptors.response.use(

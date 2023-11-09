@@ -59,8 +59,8 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     setUser(userData)
   }
 
-  async function userAndTokenStorageSave(userData: UserDto, token: string) {
-    await saveUserInStorage(userData)
+  async function userAndTokenStorageSave(data: UserDto, token: string) {
+    await saveUserInStorage(data)
     await saveTokenInStorage(token)
   }
 
@@ -73,9 +73,16 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     try {
       const { data } = await api.post('/auth/clients', userData)
 
-      if (data.client && data.token) {
-        await userAndTokenStorageSave(data.client, data.token)
-        userAndTokenUpdate(data.client, data.token)
+      if (data && data.token) {
+        const schemaUser = {
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          orderId: data.orderId,
+        }
+
+        await userAndTokenStorageSave(schemaUser, data.token)
+        userAndTokenUpdate(schemaUser, data.token)
       }
     } catch (error) {
       const isAppError = error instanceof AppError
