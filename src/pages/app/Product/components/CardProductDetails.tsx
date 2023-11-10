@@ -4,6 +4,10 @@ import { styled } from 'nativewind'
 import { ButtonUI } from '../../../../components/ui/ButtonUI'
 import { api } from '../../../../services/api'
 import { ProductDetailsDto } from '../../../../dtos/ProductDetails'
+import { useAuth } from '../../../../hooks/useAuth'
+import { useState } from 'react'
+import Toast from 'react-native-toast-message'
+import { AppError } from '../../../../utils/AppError'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -14,6 +18,32 @@ type Props = {
 }
 
 export function CardProductDetails({ data }: Props) {
+  const { user } = useAuth()
+  const [loading, setLoading] = useState<boolean>(false)
+
+  async function handleAddCart() {
+    try {
+      setLoading(true)
+      await api.post('/ordersProducts/register', {
+        productId: data.id,
+        orderId: user.orderId,
+      })
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      const isAppError = error instanceof AppError
+
+      const message = isAppError ? error.message : 'Internal server error'
+
+      Toast.show({
+        type: 'error',
+        text1: message,
+        topOffset: 60,
+        position: 'top',
+      })
+    }
+  }
+
   return (
     <StyledView className="px-4 py-4">
       <StyledView className="items-center">
@@ -46,7 +76,12 @@ export function CardProductDetails({ data }: Props) {
       </StyledView>
 
       <StyledView className="w-full my-3">
-        <ButtonUI title="Add cart" />
+        <ButtonUI
+          title="Add cart"
+          loading={loading}
+          disabled={loading}
+          onPress={handleAddCart}
+        />
       </StyledView>
 
       <StyledView>
