@@ -20,7 +20,7 @@ export function CardProduct({ data, handleDetailsPage, ...props }: Props) {
       onPress={() => handleDetailsPage(data.id)}
       key={data.id}
       {...props}
-      className="flex-row py-3 px-3 border border-gray-500 rounded-md mb-1 items-center"
+      className="flex-row py-3 px-3 border border-gray-500 rounded-md mb-2 items-center"
     >
       <StyledImage
         source={{

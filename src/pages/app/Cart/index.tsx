@@ -1,12 +1,135 @@
-import { Text, View } from 'react-native'
+import { FlatList, FlatListProps, Text, View } from 'react-native'
 
 import { styled } from 'nativewind'
+import { useEffect, useState } from 'react'
+import { api } from '../../../services/api'
+import { useAuth } from '../../../hooks/useAuth'
+import { ProductsCartDto } from '../../../dtos/ProductsCartDto'
+import { CardProductCart } from './components/CardProductCart'
+import { ShoppingCart } from 'phosphor-react-native'
+import { ButtonUI } from '../../../components/ui/ButtonUI'
+import { AppError } from '../../../utils/AppError'
+import Toast from 'react-native-toast-message'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
+const StyledFlatList = styled(FlatList<ProductsCartDto>)
 
 export function Cart() {
-  const products = ['1', '2', '3', '74', '5']
+  const { user, updateUserStorage } = useAuth()
+  const [products, setProducts] = useState<ProductsCartDto[]>([])
+  const [total, setTotal] = useState<string>()
+  const [loading, setLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    fetchProducts()
+    handleTotal()
+  }, [products])
+
+  function handleTotal() {
+    const totalPrice = products.reduce((value, order) => {
+      const valueTotal = order.product.price * order.amount
+      value += valueTotal
+      return value
+    }, 0)
+
+    setTotal(totalPrice.toFixed(2))
+  }
+
+  async function fetchProducts() {
+    try {
+      const response = await api.get<ProductsCartDto[]>(
+        `/orders/${user.orderId}/details`,
+      )
+
+      setProducts(response.data)
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const message = isAppError ? error.message : 'Internal server error'
+
+      Toast.show({
+        text1: message,
+        type: 'error',
+        position: 'top',
+        topOffset: 60,
+      })
+    }
+  }
+
+  async function handleDeleteItem(id: string) {
+    try {
+      await api.delete(`/ordersProducts/${id}`)
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const message = isAppError ? error.message : 'Internal server error'
+
+      Toast.show({
+        text1: message,
+        type: 'error',
+        position: 'top',
+        topOffset: 60,
+      })
+    }
+  }
+
+  async function handleAddAmount(id: string) {
+    try {
+      await api.put(`/ordersProducts/${id}/add`)
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const message = isAppError ? error.message : 'Internal server error'
+
+      Toast.show({
+        text1: message,
+        type: 'error',
+        position: 'top',
+        topOffset: 60,
+      })
+    }
+  }
+
+  async function handleRemoveAmount(id: string) {
+    try {
+      await api.put(`/ordersProducts/${id}/remove`)
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const message = isAppError ? error.message : 'Internal server error'
+
+      Toast.show({
+        text1: message,
+        type: 'error',
+        position: 'top',
+        topOffset: 60,
+      })
+    }
+  }
+
+  async function handleFinishOrder() {
+    try {
+      setLoading(true)
+      const response = await api.put(`/orders/${user.orderId}/finish`, {
+        valueTotal: total,
+      })
+
+      const updatedUser = user
+
+      updatedUser.orderId = response.data
+
+      await updateUserStorage(updatedUser)
+      setLoading(false)
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const message = isAppError ? error.message : 'Internal server error'
+
+      Toast.show({
+        text1: message,
+        type: 'error',
+        position: 'top',
+        topOffset: 60,
+      })
+    }
+  }
+
   return (
     <StyledView className="flex-1">
       <StyledView className="pt-14 pb-4 bg-yellow-500">
@@ -14,13 +137,49 @@ export function Cart() {
           My Cart
         </StyledText>
       </StyledView>
-      <StyledView className="flex-row justify-between px-4 my-5">
-        <StyledText className="uppercase text-base font-bold text-gray-900">
-          My products
-        </StyledText>
-        <StyledText className="uppercase text-base font-bold text-gray-500">
-          {products.length}
-        </StyledText>
+
+      <StyledView className="flex-1 px-4 my-5">
+        <StyledView className="flex-row justify-between">
+          <StyledText className="uppercase text-base font-bold text-gray-900">
+            My products
+          </StyledText>
+          <StyledText className="uppercase text-base font-bold text-gray-900">
+            {products.length}
+          </StyledText>
+        </StyledView>
+
+        {products.length === 0 ? (
+          <StyledView className="items-center justify-center flex-1">
+            <StyledView className="items-center">
+              <ShoppingCart size={100} weight="fill" color="gray" />
+              <StyledText className="text-lg text-gray-500">
+                Yous shopping cart is empty
+              </StyledText>
+            </StyledView>
+          </StyledView>
+        ) : (
+          <>
+            <StyledFlatList
+              data={products}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <CardProductCart
+                  handleDeleteItem={handleDeleteItem}
+                  handleAddAmount={handleAddAmount}
+                  handleRemoveAmount={handleRemoveAmount}
+                  data={item}
+                />
+              )}
+              showsHorizontalScrollIndicator={false}
+              className="my-5"
+            />
+            <ButtonUI
+              loading={loading}
+              title={`Finish (R$ ${total})`}
+              onPress={handleFinishOrder}
+            />
+          </>
+        )}
       </StyledView>
     </StyledView>
   )
