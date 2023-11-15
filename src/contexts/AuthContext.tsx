@@ -79,6 +79,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
           name: data.name,
           email: data.email,
           orderId: data.orderId,
+          cartId: data.cartId,
         }
 
         await userAndTokenStorageSave(schemaUser, data.token)

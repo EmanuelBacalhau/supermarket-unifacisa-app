@@ -24,7 +24,7 @@ export function HeaderHome({ user, signOut }: Props) {
       <WelcomeHome name={user.name} />
 
       <TouchableOpacity onPress={signOut}>
-        <StyledSignOut className="text-gray-200" size={32} />
+        <StyledSignOut className="text-gray-200" size={32} weight="bold" />
       </TouchableOpacity>
     </StyledView>
   )

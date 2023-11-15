@@ -3,4 +3,5 @@ export type UserDto = {
   name: string
   email: string
   orderId: string
+  cartId: string
 }

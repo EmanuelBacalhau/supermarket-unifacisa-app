@@ -38,11 +38,9 @@ export function Cart() {
 
   async function fetchProducts() {
     try {
-      const response = await api.get<ProductsCartDto[]>(
-        `/orders/${user.orderId}/details`,
-      )
+      const response = await api.get(`/orders/${user.orderId}/details`)
 
-      setProducts(response.data)
+      setProducts(response.data.products)
     } catch (error) {
       const isAppError = error instanceof AppError
       const message = isAppError ? error.message : 'Internal server error'

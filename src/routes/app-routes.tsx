@@ -11,11 +11,15 @@ import { Home } from '../pages/app/Home'
 import { Cart } from '../pages/app/Cart'
 import { Profile } from '../pages/app/Profile'
 import { Product } from '../pages/app/Product'
+import { Historic } from '../pages/app/Historic'
+import { DetailsOrder } from '../pages/app/DetailOrder'
 
 type AppRoutes = {
   home: undefined
   cart: undefined
   profile: undefined
+  historic: undefined
+  detailOrder: { orderId: string; index: number }
   product: { productId: string }
 }
 
@@ -70,6 +74,20 @@ export function AppRouter() {
       <Screen
         name="product"
         component={Product}
+        options={{
+          tabBarButton: () => null,
+        }}
+      />
+      <Screen
+        name="historic"
+        component={Historic}
+        options={{
+          tabBarButton: () => null,
+        }}
+      />
+      <Screen
+        name="detailOrder"
+        component={DetailsOrder}
         options={{
           tabBarButton: () => null,
         }}
