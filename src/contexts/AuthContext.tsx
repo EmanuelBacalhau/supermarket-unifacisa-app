@@ -52,7 +52,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   useEffect(() => {
     loadUserData()
-  }, [])
+  }, [user])
 
   function userAndTokenUpdate(userData: UserDto, token: string) {
     api.defaults.headers.common.Authorization = `Bearer ${token}`
@@ -80,6 +80,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
           email: data.email,
           orderId: data.orderId,
           cartId: data.cartId,
+          avatar: data.avatar,
         }
 
         await userAndTokenStorageSave(schemaUser, data.token)

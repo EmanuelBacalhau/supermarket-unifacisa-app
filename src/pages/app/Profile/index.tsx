@@ -16,6 +16,7 @@ import { UserDto } from '../../../dtos/UserDto'
 import { AppError } from '../../../utils/AppError'
 
 import { styled } from 'nativewind'
+import { Spinner } from 'phosphor-react-native'
 
 const StyledView = styled(View)
 const StyledText = styled(Text)
@@ -31,6 +32,7 @@ type FormData = {
 
 export function Profile() {
   const [loading, setLoading] = useState<boolean>(false)
+  const [, setLoadingPage] = useState<boolean>(false)
 
   const { user, updateUserStorage, signOut } = useAuth()
 
@@ -38,7 +40,7 @@ export function Profile() {
     control,
     handleSubmit,
     formState: { errors },
-    getValues,
+    resetField,
   } = useForm<FormData>({
     defaultValues: {
       name: user.name,
@@ -58,6 +60,10 @@ export function Profile() {
       await updateUserStorage(userUpdated)
 
       setLoading(false)
+      resetField('name')
+      resetField('confirmPassword')
+      resetField('password')
+      resetField('oldPassword')
     } catch (error) {
       setLoading(false)
       const isAppError = error instanceof AppError
@@ -77,13 +83,13 @@ export function Profile() {
     <StyledView className="flex-1">
       <HeaderProfile />
 
-      <StyledView className="flex-1 items-center mt-4 px-4">
-        <ProfileImage one={getValues().name[0]} two={getValues().name[1]} />
-
+      <StyledView className="flex-1 mt-4 px-4 items-center">
         <StyledScrollView
+          className="flex-1 my-2 w-full"
           showsVerticalScrollIndicator={false}
-          className="w-full mt-5"
         >
+          <ProfileImage setLoadingPage={setLoadingPage} />
+
           <StyledView style={{ gap: 8 }}>
             <Controller
               control={control}

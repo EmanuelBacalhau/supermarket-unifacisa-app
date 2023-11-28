@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 
 import { FormSignUp } from './components/FormSignUp'
 import { AuthHeader } from '../../../components/auth/AuthHeader'
@@ -21,13 +21,15 @@ export function SignUp() {
         Register
       </StyledText>
 
-      <FormSignUp />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <FormSignUp />
 
-      <AuthHandlePage
-        page={'signIn'}
-        titleButton="Access"
-        content="Already have an account?"
-      />
+        <AuthHandlePage
+          page={'signIn'}
+          titleButton="Access"
+          content="Already have an account?"
+        />
+      </ScrollView>
     </StyledView>
   )
 }

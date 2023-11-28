@@ -7,6 +7,7 @@ import { WelcomeHome } from './WelcomeHome'
 import { UserDto } from '../../../../dtos/UserDto'
 
 import { styled } from 'nativewind'
+import { useAuth } from '../../../../hooks/useAuth'
 
 const StyledView = styled(View)
 const StyledSignOut = styled(SignOut)
@@ -19,7 +20,7 @@ type Props = {
 export function HeaderHome({ user, signOut }: Props) {
   return (
     <StyledView className="bg-yellow-500 pt-12 pb-4 px-4 flex-row items-center">
-      <AvatarHome first={user.name[0]} second={user.name[1]} />
+      <AvatarHome />
 
       <WelcomeHome name={user.name} />
 

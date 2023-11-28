@@ -1,24 +1,17 @@
-import { View, Text } from 'react-native'
+import { Image } from 'react-native'
 
 import { styled } from 'nativewind'
+import { useAuth } from '../../../../hooks/useAuth'
 
-const StyledView = styled(View)
-const StyledText = styled(Text)
+const StyledImage = styled(Image)
 
-type Props = {
-  first: string
-  second: string
-}
+export function AvatarHome() {
+  const { user } = useAuth()
 
-export function AvatarHome({ first, second }: Props) {
   return (
-    <StyledView className="flex-row h-14 w-14 bg-black rounded-full items-center justify-center">
-      <StyledText className="text-yellow-500 font-bold text-xl uppercase">
-        {first}
-      </StyledText>
-      <StyledText className="text-yellow-500 font-bold text-xl uppercase">
-        {second}
-      </StyledText>
-    </StyledView>
+    <StyledImage
+      source={{ uri: user.avatar }}
+      className="flex-row h-14 w-14 bg-black rounded-full items-center justify-center"
+    />
   )
 }
