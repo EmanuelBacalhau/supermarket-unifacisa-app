@@ -1,0 +1,32 @@
+import { Text, TouchableOpacity, View } from 'react-native'
+
+import { styled } from 'nativewind'
+import { ClockCounterClockwise, ArrowLeft } from 'phosphor-react-native'
+import { useNavigation } from '@react-navigation/native'
+import { AppNavigatorRoutesProp } from '../../../../routes/app-routes'
+
+const StyledView = styled(View)
+const StyledText = styled(Text)
+const StyledArrowLeft = styled(ArrowLeft)
+
+export function HeaderFavorite() {
+  const router = useNavigation<AppNavigatorRoutesProp>()
+
+  function handleGoBack() {
+    return router.navigate('home')
+  }
+
+  return (
+    <StyledView className="flex-row pt-14 pb-4 px-4 bg-yellow-500 justify-between">
+      <TouchableOpacity onPress={handleGoBack}>
+        <StyledArrowLeft size={25} weight="bold" className="text-white" />
+      </TouchableOpacity>
+      <StyledText className="text-center font-bold text-xl uppercase text-white">
+        Favorite
+      </StyledText>
+      <TouchableOpacity disabled>
+        <StyledArrowLeft size={25} weight="bold" className="text-yellow-500" />
+      </TouchableOpacity>
+    </StyledView>
+  )
+}

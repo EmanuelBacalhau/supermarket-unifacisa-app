@@ -5,7 +5,7 @@ import {
   BottomTabNavigationProp,
 } from '@react-navigation/bottom-tabs'
 
-import { House, ShoppingCart, UserCircle } from 'phosphor-react-native'
+import { Heart, House, ShoppingCart, UserCircle } from 'phosphor-react-native'
 
 import { Home } from '../pages/app/Home'
 import { Cart } from '../pages/app/Cart'
@@ -13,11 +13,13 @@ import { Profile } from '../pages/app/Profile'
 import { Product } from '../pages/app/Product'
 import { Historic } from '../pages/app/Historic'
 import { DetailsOrder } from '../pages/app/DetailOrder'
+import { Favorite } from '../pages/app/Favorite'
 
 type AppRoutes = {
   home: undefined
   cart: undefined
   profile: undefined
+  favorites: undefined
   historic: undefined
   detailOrder: { orderId: string; index: number }
   product: { productId: string }
@@ -59,6 +61,15 @@ export function AppRouter() {
         options={{
           tabBarIcon: ({ color }) => {
             return <ShoppingCart color={color} weight="fill" size={30} />
+          },
+        }}
+      />
+      <Screen
+        name="favorites"
+        component={Favorite}
+        options={{
+          tabBarIcon: ({ color }) => {
+            return <Heart color={color} weight="fill" size={30} />
           },
         }}
       />

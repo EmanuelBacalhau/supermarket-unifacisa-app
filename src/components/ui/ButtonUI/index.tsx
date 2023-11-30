@@ -20,7 +20,8 @@ export function ButtonUI({
   loading,
   ...props
 }: Props) {
-  const styleButtonPrimary = 'p-3 bg-yellow-500 w-full rounded-md items-center'
+  const styleButtonPrimary =
+    'p-3 bg-yellow-500 w-full rounded-md items-center mb-1'
   const styleButtonOutline =
     'p-3 border border-yellow-500 rounded-md items-center'
 

@@ -17,11 +17,11 @@ export function SignUp() {
 
       <AuthHeader />
 
-      <StyledText className="text-center uppercase text-3xl font-bold text-white">
-        Register
-      </StyledText>
+      <StyledView className="flex-1 justify-between">
+        <StyledText className="text-center uppercase text-3xl font-bold text-white">
+          Register
+        </StyledText>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
         <FormSignUp />
 
         <AuthHandlePage
@@ -29,7 +29,7 @@ export function SignUp() {
           titleButton="Access"
           content="Already have an account?"
         />
-      </ScrollView>
+      </StyledView>
     </StyledView>
   )
 }

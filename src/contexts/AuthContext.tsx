@@ -52,7 +52,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   useEffect(() => {
     loadUserData()
-  }, [user])
+  }, [user.avatar])
 
   function userAndTokenUpdate(userData: UserDto, token: string) {
     api.defaults.headers.common.Authorization = `Bearer ${token}`

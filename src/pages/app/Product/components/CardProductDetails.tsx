@@ -1,4 +1,4 @@
-import { View, Image, Text } from 'react-native'
+import { View, Image, Text, TouchableOpacity } from 'react-native'
 
 import { styled } from 'nativewind'
 import { ButtonUI } from '../../../../components/ui/ButtonUI'
@@ -20,7 +20,30 @@ type Props = {
 export function CardProductDetails({ data }: Props) {
   const { user } = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
+  const [loadingFavorite, setLoadingAFavorite] = useState<boolean>(false)
 
+  async function handleAddFavorite() {
+    try {
+      setLoadingAFavorite(true)
+      await api.post('/favorite/register', {
+        productId: data.id,
+        clientId: user.id,
+      })
+      setLoadingAFavorite(false)
+    } catch (error) {
+      setLoadingAFavorite(false)
+      const isAppError = error instanceof AppError
+
+      const message = isAppError ? error.message : 'Internal server error'
+
+      Toast.show({
+        type: 'error',
+        text1: message,
+        topOffset: 60,
+        position: 'top',
+      })
+    }
+  }
   async function handleAddCart() {
     try {
       setLoading(true)
@@ -81,6 +104,12 @@ export function CardProductDetails({ data }: Props) {
           loading={loading}
           disabled={loading}
           onPress={handleAddCart}
+        />
+        <ButtonUI
+          title="Add favorite"
+          loading={loadingFavorite}
+          disabled={loadingFavorite}
+          onPress={handleAddFavorite}
         />
       </StyledView>
 
