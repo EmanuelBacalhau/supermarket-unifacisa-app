@@ -18,6 +18,9 @@ const StyledFlatList = styled(FlatList<Message>)
 const socket = io('ws://192.168.0.121:3333')
 export function Chat() {
   const { user } = useAuth()
+
+  console.log(user)
+
   const [message, setMessage] = useState<string>('')
   const [messages, setMessages] = useState<Message[]>([] as Message[])
 
