@@ -1,5 +1,5 @@
 import { styled } from 'nativewind'
-import { FlatList, Pressable, TextInput, View } from 'react-native'
+import { FlatList, Pressable, Text, TextInput, View } from 'react-native'
 import { HeaderChat } from './components/HeaderChat'
 import { SendHorizonal } from 'lucide-react-native'
 import { io } from 'socket.io-client'
@@ -10,6 +10,7 @@ import { Message } from '../../../dtos/MessageDto'
 import { MessageCard } from './components/MessageCard'
 
 const StyledView = styled(View)
+const StyledText = styled(Text)
 const StyledTextInput = styled(TextInput)
 const StyledPressable = styled(Pressable)
 
@@ -46,13 +47,21 @@ export function Chat() {
       <HeaderChat />
 
       <StyledView className="flex-1 px-2 py-2">
-        <StyledFlatList
-          showsVerticalScrollIndicator={false}
-          data={messages}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <MessageCard item={item} />}
-          className="mb-16"
-        />
+        {messages.length ? (
+          <StyledFlatList
+            showsVerticalScrollIndicator={false}
+            data={messages}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <MessageCard item={item} />}
+            className="mb-16"
+          />
+        ) : (
+          <StyledView className="flex-1 justify-center items-center">
+            <StyledText className="text-lg text-gray-700">
+              Não foi encontrado por aqui! 😕
+            </StyledText>
+          </StyledView>
+        )}
       </StyledView>
 
       <StyledView className="flex-row absolute bottom-2 w-full px-2">

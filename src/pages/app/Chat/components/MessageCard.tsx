@@ -21,7 +21,7 @@ export function MessageCard({ item }: Props) {
   const myMessageContainer = 'flex-row-reverse justify-start mb-2 mr-20'
   const myMessageText = 'bg-green-500 p-2 rounded-lg'
 
-  const clientMessageContainer = 'flex-row mb-2 mr-20'
+  const clientMessageContainer = 'flex-row mb-2 mr-28'
   const clientMessageText = 'bg-gray-400 p-2 rounded-lg'
   return (
     <StyledView
@@ -32,12 +32,12 @@ export function MessageCard({ item }: Props) {
       {user.id !== item.client.id && (
         <>
           {!item.client.avatar ? (
-            <StyledUserCircle className="mr-2" size={48} weight="light" />
+            <StyledUserCircle className="mr-1.5" size={48} weight="light" />
           ) : (
             <StyledImage
               source={{ uri: item.client.avatar }}
               alt="avatar"
-              className="h-12 w-12 rounded-full mr-2"
+              className="h-12 w-12 rounded-full mr-1.5"
             />
           )}
         </>
