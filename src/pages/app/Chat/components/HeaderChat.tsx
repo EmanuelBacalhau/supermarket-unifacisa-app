@@ -9,7 +9,7 @@ const StyledView = styled(View)
 const StyledText = styled(Text)
 const StyledArrowLeft = styled(ArrowLeft)
 
-export function HeaderFavorite() {
+export function HeaderChat() {
   const router = useNavigation<AppNavigatorRoutesProp>()
 
   function handleGoBack() {
@@ -22,7 +22,7 @@ export function HeaderFavorite() {
         <StyledArrowLeft size={25} weight="bold" className="text-white" />
       </TouchableOpacity>
       <StyledText className="text-center font-bold text-xl uppercase text-white">
-        Favorite
+        Chat
       </StyledText>
       <TouchableOpacity disabled>
         <StyledArrowLeft size={25} weight="bold" className="text-yellow-500" />

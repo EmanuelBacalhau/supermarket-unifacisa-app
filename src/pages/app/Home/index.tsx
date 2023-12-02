@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { FlatList, View } from 'react-native'
+import { FlatList, Pressable, View } from 'react-native'
 import { useAuth } from '../../../hooks/useAuth'
 import { api } from '../../../services/api'
 
@@ -14,8 +14,11 @@ import { AppNavigatorRoutesProp } from '../../../routes/app-routes'
 import { ProductDto } from '../../../dtos/ProductDto'
 
 import { styled } from 'nativewind'
+import { ChatsCircle } from 'phosphor-react-native'
 
 const StyledView = styled(View)
+const StyledPressable = styled(Pressable)
+const StyledChatsCircle = styled(ChatsCircle)
 const StyledFlatList = styled(FlatList<ProductDto>)
 
 export function Home() {
@@ -67,6 +70,15 @@ export function Home() {
         className="my-2 mx-2"
         showsVerticalScrollIndicator={false}
       />
+
+      <StyledPressable
+        onPress={() => {
+          navigation.navigate('chat')
+        }}
+        className="absolute bottom-0 right-0 mb-4 mr-4 bg-yellow-500 p-4 rounded-full"
+      >
+        <StyledChatsCircle size={35} />
+      </StyledPressable>
     </StyledView>
   )
 }

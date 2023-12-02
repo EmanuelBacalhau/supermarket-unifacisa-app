@@ -14,6 +14,7 @@ import { Product } from '../pages/app/Product'
 import { Historic } from '../pages/app/Historic'
 import { DetailsOrder } from '../pages/app/DetailOrder'
 import { Favorite } from '../pages/app/Favorite'
+import { Chat } from '../pages/app/Chat'
 
 type AppRoutes = {
   home: undefined
@@ -21,6 +22,7 @@ type AppRoutes = {
   profile: undefined
   favorites: undefined
   historic: undefined
+  chat: undefined
   detailOrder: { orderId: string; index: number }
   product: { productId: string }
 }
@@ -101,6 +103,16 @@ export function AppRouter() {
         component={DetailsOrder}
         options={{
           tabBarButton: () => null,
+        }}
+      />
+      <Screen
+        name="chat"
+        component={Chat}
+        options={{
+          tabBarButton: () => null,
+          tabBarStyle: {
+            display: 'none',
+          },
         }}
       />
     </Navigator>
