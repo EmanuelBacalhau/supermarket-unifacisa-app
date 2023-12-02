@@ -24,7 +24,7 @@ export function CardProduct({ data, handleDetailsPage, ...props }: Props) {
     >
       <StyledImage
         source={{
-          uri: `${api.defaults.baseURL}/products/${data.imageUrl}`,
+          uri: `https://teste-132.s3.amazonaws.com/${data.imageUrl}`,
         }}
         className="mr-4 h-20 w-20"
         resizeMode="center"

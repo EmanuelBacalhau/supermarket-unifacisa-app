@@ -20,8 +20,6 @@ const socket = io('ws://192.168.0.121:3333')
 export function Chat() {
   const { user } = useAuth()
 
-  console.log(user)
-
   const [message, setMessage] = useState<string>('')
   const [messages, setMessages] = useState<Message[]>([] as Message[])
 
@@ -37,7 +35,6 @@ export function Chat() {
   function handleNewMessage() {
     if (message.trim().length) {
       socket.emit('send_message', { content: message, userId: user.id })
-      console.log(message)
       setMessage('')
     }
   }

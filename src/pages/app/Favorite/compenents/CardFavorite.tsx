@@ -41,7 +41,7 @@ export function CardFavorite({
     >
       <StyledImage
         source={{
-          uri: `${api.defaults.baseURL}/products/${data.product.imageUrl}`,
+          uri: `https://teste-132.s3.amazonaws.com/${data.product.imageUrl}`,
         }}
         alt={data.product.name}
         className="h-24 w-24 rounded-md"

@@ -72,7 +72,7 @@ export function CardProductDetails({ data }: Props) {
       <StyledView className="items-center">
         <StyledImage
           source={{
-            uri: `${api.defaults.baseURL}/products/${data.imageUrl}`,
+            uri: `https://teste-132.s3.amazonaws.com/${data.imageUrl}`,
           }}
           className="h-64 w-64"
           resizeMode="center"
